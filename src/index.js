@@ -15,19 +15,31 @@ module.exports = function check(str, bracketsConfig) {
       check[i] = new Array();
       check[i] = 0;
   };
-  for (var i = 0; i < str.length; i++) //считываем посимвольно строку
+  var temp = [];//запишем массив хранящий статус всех скобок
+  for (var s = 0; s < str.length; s++) //считываем посимвольно строку
   {
-      for (var j = 0; j < length; j++) //перебираем возможные скобки
+      for (var i = 0; i < length; i++) //перебираем возможные скобки
       {
-          if (str[i] == bracketsConfig[j][0]) //проверка на наличие открывающих скобок
+          if (str[s] == bracketsConfig[i][0]) //проверка на наличие открывающих скобок
           {
-              arr[j]++; //инкремент значения скобок типа j
+              for (var z = 0; z < length; z++)
+              {
+                  temp[z] = arr[z]; // хранит статус скобки z
+              }
+              check[i].push(temp);//i - скобка открывающая j-очередное открытие k-статус скобки
+              arr[i]++; //инкремент значения скобок типа j
           };
-          if (str[i] == bracketsConfig[j][1]) //проверка на наличие закрывающих скобок
+          if (str[s] == bracketsConfig[i][1]) //проверка на наличие закрывающих скобок
           {
-              arr[j]--; //денкремент значения скобок типа j
+              arr[i]--; //денкремент значения скобок типа j
+              for (var z = 0; z < length; z++)
+              {
+                  if (check[i][check[i].length][z] != arr[z])
+                  return false;
+              }
+              check[i].pop();
           };
-          if (arr[j] < 0) //проверяем не имеем ли больше закрывающих скобок чем открывающих
+          if (arr[i] < 0) //проверяем не имеем ли больше закрывающих скобок чем открывающих
           {
               return false;
           };
