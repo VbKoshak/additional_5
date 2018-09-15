@@ -7,13 +7,14 @@ module.exports = function check(str, bracketsConfig) {
       arr.push(0);
   }; //придаём всем значением ноль
   var check = new Array();
+  var opened = new Array();
    /*на каждый вид скобок i -> при открытии скобки создаётся массив i-j -> хранящий значение arr каждого вида скобок i-j-k; при закрытии скобки i сверяется последний элемент массива i-j с тем статусом который имеется сейчас и если они совпадают удаляется последний элемент мссива i-j если же нет
   возвращается значение false
   */
   for (var i = 0; i < length; i++) // i = индекс вида скобок
   {
       check[i] = new Array();
-      check[i] = 0;
+      opened[i] = -1;
   };
   var temp = [];//запишем массив хранящий статус всех скобок
   for (var s = 0; s < str.length; s++) //считываем посимвольно строку
@@ -22,11 +23,12 @@ module.exports = function check(str, bracketsConfig) {
       {
           if (str[s] == bracketsConfig[i][0]) //проверка на наличие открывающих скобок
           {
+              opened[i]++;
+              check[i][opened[i]] = new Array;
               for (var z = 0; z < length; z++)
               {
-                  temp[z] = arr[z]; // хранит статус скобки z
-              }
-              check[i].push(temp);//i - скобка открывающая j-очередное открытие k-статус скобки
+              check[i][opened[i]][z] = arr[z];
+              };
               arr[i]++; //инкремент значения скобок типа j
           };
           if (str[s] == bracketsConfig[i][1]) //проверка на наличие закрывающих скобок
@@ -34,10 +36,10 @@ module.exports = function check(str, bracketsConfig) {
               arr[i]--; //денкремент значения скобок типа j
               for (var z = 0; z < length; z++)
               {
-                  if (check[i][check[i].length][z] != arr[z])
+                  if (check[i][opened[i]][z] != arr[z])
                   return false;
               }
-              check[i].pop();
+              opened[i]--;
           };
           if (arr[i] < 0) //проверяем не имеем ли больше закрывающих скобок чем открывающих
           {
